@@ -5,8 +5,8 @@ require 'json'
 enable :sessions
 
 configure do
-  set :music_directory, '/Users/jhart/Music/iTunes/iTunes Media/Music/'
-  set :deletion_directory, '/Users/jhart/Music/test_deleted/'
+  set :music_directory, '/Volumes/Media/Music/'
+  set :deletion_directory, '/Volumes/Media/Deleted Music/'
 end
 
 get '/' do
