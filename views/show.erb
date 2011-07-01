@@ -4,10 +4,17 @@
 <head>  
 </head>
 <body>
-<% if(@records) %>
-<% @records.each do |res| %>
-	<%= res %><br/>
-<% end %>
+<h1>Delete records</h1>
+<% if(@delete_records) %>
+	<% @delete_records.each do |res| %>
+		<%= res %><br/>
+	<% end %>
+<% end %> 
+<h1>Problem records</h1>
+<% if(@problem_records) %>
+	<% @problem_records.each do |res| %>
+		<%= res %><br/>
+	<% end %>
 <% end %> 
 <a href="/confirm">Delete these directories</a>
 </body>
