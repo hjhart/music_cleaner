@@ -1,0 +1,3 @@
+Moved /Users/jhart/Music/iTunes/iTunes Media/Music/The Crucifucks to /Users/jhart/Music/test_deleted/The Crucifucks
+Moved /Users/jhart/Music/iTunes/iTunes Media/Music/Young Money to /Users/jhart/Music/test_deleted/Young Money
+Moved /Users/jhart/Music/iTunes/iTunes Media/Music/Yuksek to /Users/jhart/Music/test_deleted/Yuksek

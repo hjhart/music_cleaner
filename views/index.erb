@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+  <script>
+  $(document).ready(function(){
+	$("#example").autocomplete({
+		source: "list",
+		delay: 400
+		});
+  });
+  </script>
+  
+</head>
+<body>
+<% if @message %>
+  <span style="color: green; font-size: 2em; font-style: italic;"><%=@message%></span>
+<% end %>
+<form action="/delete">
+  <input type="input" id="example" name="key" style="font-size: 2em;" /><input type="submit" value="Delete" name="delete">
+<br/><br/>
+<a href="/show">Show queue</a>
+</form>
+</body>
+</html>
