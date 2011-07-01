@@ -29,8 +29,14 @@ end
 
 get '/delete' do
   @r = Redis.new
-  @r.zadd(:folders_to_delete,0,params[:key])
-  session['message'] = "Popped '#{params[:key]}' into the deletion queue."
+  if(params[:delete])
+    @r.zadd(:folders_to_delete,0,params[:key])
+    session['message'] = "Popped '#{params[:key]}' into the deletion queue."
+  else
+    @r.zadd(:folders_to_refactor,0,params[:key])
+    session['message'] = "Popped '#{params[:key]}' into the problem queue."
+  end
+
   redirect '/'
 end
 
@@ -53,13 +59,16 @@ get '/confirm' do
   end
   
   @r.del :folders_to_delete
+  @r.del :folders_to_refactor
+  
   session['message'] = "Deleted folders."
   redirect '/refresh'
 end
 
 get '/show' do
   @r = Redis.new
-  @records = @r.zrange(:folders_to_delete,0,-1)
+  @delete_records = @r.zrange(:folders_to_delete,0,-1)
+  @problem_records = @r.zrange(:folders_to_refactor,0,-1)
   erb :show
 end
         
