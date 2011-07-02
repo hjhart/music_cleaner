@@ -1,0 +1,18 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>  
+</head>
+<body>
+<h1>Playlists</h1>
+<a href='/export'>Export Playlists</a>
+<% if(@playlists) %>
+	<% @playlists.each do |playlist_name, songs| %>
+		<h2><%= playlist_name %></h2><br/>
+		<% songs.each do |song| %>
+		<%= song %><br/>
+		<% end %>
+	<% end %>
+<% end %> 
+</body>
+</html>
