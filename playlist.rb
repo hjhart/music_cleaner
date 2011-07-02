@@ -6,7 +6,8 @@ require 'find'
 enable :sessions
 
 configure do
-  set :music_directory, '/Users/jhart/Music/iTunes/iTunes Media/Music/'
+  set :music_directory, '/Volumes/Media/Music/'
+  set :playlist_directory, '/Volumes/Media/Music/Playlists/'
 end
 
 get '/' do
@@ -25,7 +26,7 @@ get '/refresh' do
   regexp = /.*\/(.+)\/(.+)\/(.+)\.([\d\w]+)/
   files = files.map do |r| 
     match = r.match regexp;
-    song_title = match[3].sub(/^\d+ /, '')
+    song_title = match[3].sub(/^[\d\- ]+ /, '')
     "#{song_title} [#{match[1]}] #{match[2]}"
   end
   
@@ -112,7 +113,7 @@ get '/export' do
   
   playlists.each do |playlist_name, songs|
     
-    playlist_file = File.open("playlists/#{playlist_name}.m3u", 'w')
+    playlist_file = File.open(settings.playlist_directory + playlist_name + ".m3u", 'w')
     
     # Find song in music directory with song information. Let's grab song, artist, and album.
     songs.each do |song_string|
@@ -123,7 +124,7 @@ get '/export' do
         song.gsub!(bad_regexp_chars, '.')
         artist.gsub!(bad_regexp_chars, '.')
         album.gsub!(bad_regexp_chars, '.')
-        file_path = %r|#{artist}\/#{album}\/\d+ ?#{song}|
+        file_path = %r|#{artist}\/#{album}\/[\d\- ]+#{song}|
         files = []
         
         # search for the matching file
