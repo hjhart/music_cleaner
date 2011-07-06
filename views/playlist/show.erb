@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Playlists</h1>
-<a href='/export'>Export Playlists</a>
+<a href='/playlist/export'>Export Playlists</a>
 <% if(@playlists) %>
 	<% @playlists.each do |playlist_name, songs| %>
 		<h2><%= playlist_name %></h2><br/>

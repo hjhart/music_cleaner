@@ -1,24 +1,4 @@
-require 'sinatra'
-require 'redis'
-require 'json'
-require 'find'
-
-enable :sessions
-
-configure do
-  set :music_directory, '/Volumes/Media/Music/'
-  set :playlist_directory, '/Volumes/Media/Music/Playlists/'
-end
-
-get '/' do
-  @r = Redis.new
-  @playlists = @r.zrange(:playlist_names,0,-1)
-  @message = session['message']
-  session['message'] = nil
-  erb :index_playlists
-end
-
-get '/refresh' do
+get '/playlist/refresh' do
   @r = Redis.new
 #  Find.find(settings.music_directory) { |f| files << f if f =~ /(mp3$|m4a$|m4p$)/ }
   files = []
@@ -51,7 +31,7 @@ get '/refresh' do
   redirect '/'
 end
 
-get '/add' do
+get '/playlist/add' do
   @r = Redis.new
   
   submitted_fields = params
@@ -74,11 +54,11 @@ get '/add' do
   redirect '/'
 end
 
-get '/list' do 
+get '/playlist/list' do 
   @r = Redis.new
   @results = []
   
-  search(@r,params[:term],50).each{|res|
+  search(@r,params[:term],50, :music_file_names).each{|res|
       @results << res
   }
   
@@ -86,7 +66,7 @@ get '/list' do
   @results.to_json
 end
 
-get '/show' do
+get '/playlist/show' do
   @r = Redis.new
   @playlists = {}
   @r.zrange('playlist_names', 0, -1).each do |playlist|
@@ -96,10 +76,10 @@ get '/show' do
     end
   end
   
-  erb :show_playlists
+  erb :'playlist/show'
 end
 
-get '/export' do
+get '/playlist/export' do
   @r = Redis.new
   playlists = {}
   @r.zrange('playlist_names', 0, -1).each do |playlist|
@@ -148,27 +128,7 @@ get '/export' do
     playlist_file.close
   end
   log_file.close
-end
-
-def search(r,prefix,count)
-    results = []
-    rangelen = 50 # This is not random, try to get replies < MTU size
-    start = r.zrank(:music_file_names,prefix)
-    return [] if !start
-    while results.length != count
-        range = r.zrange(:music_file_names,start,start+rangelen-1)
-        start += rangelen
-        break if !range or range.length == 0
-        range.each {|entry|
-            minlen = [entry.length,prefix.length].min
-            if entry[0...minlen] != prefix[0...minlen]
-                count = results.count
-                break
-            end
-            if entry[-1..-1] == "*" and results.length != count
-                results << entry[0...-1]
-            end
-        }
-    end
-    return results
+  
+  session['message'] = "Export completed."
+  redirect '/'
 end

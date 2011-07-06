@@ -1,27 +1,102 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
                     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+
 <head>
-  <script src="http://code.jquery.com/jquery-latest.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
-  <script>
+  <script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="jquery-ui.min.css" type="text/css" media="screen" charset="utf-8">
+  <script src="jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="application.js" type="text/javascript" charset="utf-8"></script>
+  
+  <script type="text/javascript">
+  var FOLDER_INPUT_MESSAGE = 'Enter folder name...'
+  var PLAYLIST_INPUT_MESSAGE = 'Enter song name to add...'	
+
   $(document).ready(function(){
-	$("#example").autocomplete({
-		source: "list",
+	$("#playlist").autocomplete({
+		source: "/playlist/list",
+		delay: 400
+	});
+	$("input[type=submit]").button();
+	$(".playlist_set").buttonset();
+	$("#new").click(function() {
+		if($(this).is(":checked")) {
+			$("#playlist_name").attr("disabled", false)
+			$("#playlist_name").focus()
+		} else {
+			$("#playlist_name").attr("disabled", true)
+		}
+	})
+	
+	init_input($("#delete"), FOLDER_INPUT_MESSAGE)
+	init_input($("#playlist"), PLAYLIST_INPUT_MESSAGE)
+	
+	
+	$("#delete").autocomplete({
+		source: "/folder/list",
 		delay: 400
 		});
+	
   });
+
   </script>
+  <style>
+	body {
+		width: 600px;
+	}
+	h1, h2, h3, h4, h5, h6 {
+	    font-family: "Century Gothic";
+	    font-weight: normal;
+	}
+
+	body, p, ol, ul, td {
+	    font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	    font-size: 24px;
+	    font-weight: 100;
+	    letter-spacing: 1px;
+	  	line-height: 1.5em;
+	}
+	
+	#notice {
+		color: green; 
+		font-size: 2em; 
+		font-style: italic;
+	}
+	</style>
   
 </head>
 <body>
 <% if @message %>
-  <span style="color: green; font-size: 2em; font-style: italic;"><%=@message%></span>
+  <span id="notice"><%=@message%></span>
 <% end %>
-<form action="/delete">
-  <input type="input" id="example" name="key" style="font-size: 2em;" /><input type="submit" value="Delete" name="delete"><input type="submit" value="Watch" name="watch">
+
+<form action="/folder/delete">
+  <input type="input" id="delete" name="key" style="font-size: 2em;" /><input type="submit" value="Delete" name="delete"><input type="submit" value="Watch" name="watch">
 <br/><br/>
-<a href="/show">Show queue</a>
+<a href="/folder/show">Show queue</a>
+</form>
+
+
+<form action="/playlist/add">
+  	<input type="input" id="playlist" name="key" style="font-size: 2em;" />
+	
+<% if (@playlists) %>
+<div class="playlist_set">
+	<% @playlists.each_with_index do |playlist, index|
+		playlist_id = playlist.gsub(/[^\w]/, "_").downcase
+		if(index % 3 == 0)
+	%>		
+</div><div class="playlist_set">
+	 <% end %>
+	<input type="checkbox" name="<%= playlist %>" value="1" id="<%= playlist_id %>"/><label for="<%= playlist_id %>"><%= playlist %></label>
+	<% end %>
+<% end %>
+	
+	<input type="checkbox" name="new" value="1" id="new"/><label for="new">New</label>
+</div>
+	<input type="input" disabled="true" id="playlist_name" name="playlist_name" style="font-size: 2em;"/><br/>
+  	<input type="submit" name="submit" value="add to playlist"/>
+<br/><a href="/playlist/show">Show Playlists</a>
 </form>
 </body>
 </html>

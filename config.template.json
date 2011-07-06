@@ -1,0 +1,6 @@
+/*  Copy this file to config.json and adjust the settings to configure your server.  Make sure they all end with backslashes */
+{
+	"music_directory": "/path/to/music/directory",
+    "playlist_directory": "/path/to/playlist/directory",
+    "deletion_directory": "/path/to/deletion/directory"
+}
