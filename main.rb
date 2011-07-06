@@ -21,6 +21,7 @@ get '/' do
   erb :index
 end
 
-require 'folder'
-require 'playlist'
-require 'application'
+
+require File.expand_path(File.dirname(__FILE__), 'folder')
+require File.expand_path(File.dirname(__FILE__), 'playlist')
+require File.expand_path(File.dirname(__FILE__), 'application')
