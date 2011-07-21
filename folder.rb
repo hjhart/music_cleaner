@@ -1,11 +1,19 @@
 get '/folder/list' do 
   @r = Redis.new
   @results = []
-  
-  search(@r,params[:term],50, :artist_folders).each{|res|
+
+  search_term = params[:term]
+
+  return if search_term.nil?
+
+  search_term.downcase!
+
+  search(@r,search_term ,50, :artist_folders).each{|res|
       @results << res
   }
-  
+
+  @results = ["No Results"] if @results.empty?
+
   content_type :json
   @results.to_json
 end
@@ -57,7 +65,7 @@ end
         
 get '/folder/refresh' do
   @r = Redis.new
-  directories = Dir[settings.music_directory + "/" + '**'].select { |f| File::directory?(f) }.map { |f| f.match(/.*\/(.*)$/)[1] }
+  directories = Dir[settings.music_directory + "/" + '**'].select { |f| File::directory?(f) }.map { |f| f.match(/.*\/(.*)$/)[1].downcase }
   
   # Create the artist_folders sorted set
   @r.del :artist_folders

@@ -21,7 +21,6 @@ get '/' do
   erb :index
 end
 
-
 require File.expand_path(File.dirname(__FILE__), 'folder')
 require File.expand_path(File.dirname(__FILE__), 'playlist')
 require File.expand_path(File.dirname(__FILE__), 'application')

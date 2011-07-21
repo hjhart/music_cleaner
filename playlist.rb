@@ -6,7 +6,7 @@ get '/playlist/refresh' do
   regexp = /.*\/(.+)\/(.+)\/(.+)\.([\d\w]+)/
   files = files.map do |r| 
     match = r.match regexp;
-    song_title = match[3].sub(/^[\d\- ]+ /, '')
+    song_title = match[3].sub(/^[\d\- ]+ /, '').downcase
     "#{song_title} [#{match[1]}] #{match[2]}"
   end
   
@@ -57,11 +57,18 @@ end
 get '/playlist/list' do 
   @r = Redis.new
   @results = []
-  
-  search(@r,params[:term],50, :music_file_names).each{|res|
+
+  search_term = params[:term]
+
+  return if search_term.nil?
+
+  search_term.downcase!
+
+  search(@r, search_term, 50, :music_file_names).each{|res|
       @results << res
   }
-  
+  @results = ["No Results"] if @results.empty?
+
   content_type :json
   @results.to_json
 end
